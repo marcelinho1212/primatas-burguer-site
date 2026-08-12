@@ -1,4 +1,5 @@
 const WHATSAPP_NUMBER = "553188415568";
+const IPATINGA_MUNICIPIO_ID = "313130";
 const MENU = {
   burgers: [
     {id:"primatas", name:"Primatas Burguer", tagline:"O mais pedido!", price:35.90, img:"images/primatas-burguer.jpeg",
@@ -35,6 +36,11 @@ let openSheet = null;
 const qtyState = {};
 let sheetQty = 1;
 let ticketMetaCollapsed = false;
+const ipatingaFallbackBairros = [
+  "Bethania", "Bom Jardim", "Canaa", "Caravelas", "Cidade Nobre", "Esperanca",
+  "Horto", "Iguacu", "Ideal", "Imbaubas", "Ipanema", "Jardim Panorama",
+  "Limoeiro", "Novo Cruzeiro", "Parque das Aguas", "Veneza", "Vila Celeste"
+];
 
 function brl(v){ return "R$ " + v.toFixed(2).replace(".", ","); }
 
@@ -290,6 +296,62 @@ function closeTicket(){
   unlockPage();
 }
 
+function getAddressFields(){
+  return {
+    bairro: document.getElementById("custBairro"),
+    rua: document.getElementById("custRua"),
+    numero: document.getElementById("custNumero")
+  };
+}
+
+function clearAddressErrors(){
+  const fields = getAddressFields();
+  [fields.bairro, fields.rua, fields.numero].forEach(el => {
+    if(el) el.classList.remove("error");
+  });
+}
+
+function renderNeighborhoodOptions(names){
+  const datalist = document.getElementById("bairroList");
+  if(!datalist) return;
+  const unique = [...new Set(names.filter(Boolean).map(n => n.trim()))]
+    .sort((a, b) => a.localeCompare(b, "pt-BR"));
+  datalist.innerHTML = unique.map(name => `<option value="${name.replace(/"/g, "&quot;")}"></option>`).join("");
+}
+
+async function loadIpatingaNeighborhoods(){
+  const endpoints = [
+    `https://servicodados.ibge.gov.br/api/v1/localidades/municipios/${IPATINGA_MUNICIPIO_ID}/subdistritos`,
+    `https://servicodados.ibge.gov.br/api/v1/localidades/municipios/${IPATINGA_MUNICIPIO_ID}/distritos`
+  ];
+  for(const url of endpoints){
+    try{
+      const res = await fetch(url);
+      if(!res.ok) continue;
+      const data = await res.json();
+      if(Array.isArray(data) && data.length){
+        const names = data.map(item => item?.nome).filter(Boolean);
+        if(names.length){
+          renderNeighborhoodOptions(names);
+          return;
+        }
+      }
+    } catch(_) {
+      // Tenta o proximo endpoint se houver erro de rede ou CORS.
+    }
+  }
+  renderNeighborhoodOptions(ipatingaFallbackBairros);
+}
+
+function ensureInputVisible(field){
+  if(!field) return;
+  const insideOverlay = field.closest("#overlay") || field.closest("#itemOverlay");
+  if(!insideOverlay) return;
+  setTimeout(() => {
+    field.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+  }, 220);
+}
+
 function setTicketMetaCollapsed(collapsed){
   ticketMetaCollapsed = collapsed;
   const footer = document.querySelector(".ticket-footer");
@@ -301,6 +363,11 @@ function setTicketMetaCollapsed(collapsed){
 
 function toggleTicketMeta(){
   setTicketMetaCollapsed(!ticketMetaCollapsed);
+}
+
+function syncTicketMetaForViewport(){
+  const isDesktop = window.matchMedia("(min-width: 720px)").matches;
+  setTicketMetaCollapsed(!isDesktop);
 }
 
 function openItem(cat, id){
@@ -349,16 +416,41 @@ function sendOrder(){
     return;
   }
   nameInput.classList.remove("error");
+  const { bairro, rua, numero } = getAddressFields();
+  const bairroVal = (bairro?.value || "").trim();
+  const ruaVal = (rua?.value || "").trim();
+  const numeroVal = (numero?.value || "").trim();
+  clearAddressErrors();
+  if(!bairroVal){
+    bairro.classList.add("error");
+    bairro.focus();
+    setTicketMetaCollapsed(false);
+    return;
+  }
+  if(!ruaVal){
+    rua.classList.add("error");
+    rua.focus();
+    setTicketMetaCollapsed(false);
+    return;
+  }
+  if(!numeroVal){
+    numero.classList.add("error");
+    numero.focus();
+    setTicketMetaCollapsed(false);
+    return;
+  }
   const payMethodEl = document.getElementById("payMethod");
   const payMethod = payMethodEl.value.trim();
   if(!payMethod){
     payMethodEl.classList.add("error");
     payMethodEl.focus();
+    setTicketMetaCollapsed(false);
     return;
   }
   payMethodEl.classList.remove("error");
   let msg = "🦍🔥 *Pedido — Primatas Burguer*\n\n";
   msg += `*Nome:* ${name}\n\n`;
+  msg += `*Endereco:* Rua ${ruaVal}, ${numeroVal} - ${bairroVal}, Ipatinga/MG\n\n`;
   msg += `*Forma de pagamento:* ${payMethod}\n\n`;
   cart.forEach(i=>{
     msg += `• ${i.qty}x ${i.name} — ${brl(i.price*i.qty)}\n`;
@@ -505,14 +597,49 @@ function bindUI(){
     nameInput.classList.remove("error");
     localStorage.setItem("pb-name", nameInput.value);
   });
+  const addressFields = getAddressFields();
+  addressFields.bairro.value = localStorage.getItem("pb-bairro") || "";
+  addressFields.rua.value = localStorage.getItem("pb-rua") || "";
+  addressFields.numero.value = localStorage.getItem("pb-numero") || "";
+  addressFields.bairro.addEventListener("input", () => {
+    addressFields.bairro.classList.remove("error");
+    localStorage.setItem("pb-bairro", addressFields.bairro.value);
+  });
+  addressFields.rua.addEventListener("input", () => {
+    addressFields.rua.classList.remove("error");
+    localStorage.setItem("pb-rua", addressFields.rua.value);
+  });
+  addressFields.numero.addEventListener("input", () => {
+    addressFields.numero.classList.remove("error");
+    localStorage.setItem("pb-numero", addressFields.numero.value);
+  });
   const payMethodEl = document.getElementById("payMethod");
   if(payMethodEl){
     payMethodEl.addEventListener("change", () => payMethodEl.classList.remove("error"));
   }
+  document.getElementById("overlay").addEventListener("focusin", (e) => {
+    if(e.target.matches("input, select, textarea")){
+      setTicketMetaCollapsed(false);
+      ensureInputVisible(e.target);
+    }
+  });
+  document.getElementById("itemOverlay").addEventListener("focusin", (e) => {
+    if(e.target.matches("input, select, textarea")) ensureInputVisible(e.target);
+  });
 
   window.addEventListener("resize", () => { measureChrome(); syncOverlay(); });
+  window.addEventListener("orientationchange", syncTicketMetaForViewport);
+  let resizeMetaTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeMetaTimer);
+    resizeMetaTimer = setTimeout(syncTicketMetaForViewport, 120);
+  });
   if(window.visualViewport){
-    window.visualViewport.addEventListener("resize", syncOverlay);
+    window.visualViewport.addEventListener("resize", () => {
+      syncOverlay();
+      const active = document.activeElement;
+      if(active && active.matches && active.matches("input, select, textarea")) ensureInputVisible(active);
+    });
     window.visualViewport.addEventListener("scroll", syncOverlay);
   }
   document.addEventListener("keydown", (e) => {
@@ -526,6 +653,7 @@ function bindUI(){
 buildCards();
 bindUI();
 renderCart();
-setTicketMetaCollapsed(false);
+loadIpatingaNeighborhoods();
+syncTicketMetaForViewport();
 setupScrollSpy();
 measureChrome();

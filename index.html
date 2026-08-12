@@ -197,6 +197,22 @@
           <input type="text" id="custName" placeholder="Como te chamamos no pedido?" autocomplete="name">
           <p class="name-hint">A gente usa pra identificar o pedido no WhatsApp.</p>
         </div>
+        <div class="ticket-address-field">
+          <label for="custBairro">Bairro</label>
+          <input type="text" id="custBairro" list="bairroList" placeholder="Selecione ou digite seu bairro" autocomplete="address-level2">
+          <datalist id="bairroList"></datalist>
+        </div>
+        <div class="ticket-address-row">
+          <div class="ticket-address-field">
+            <label for="custRua">Rua</label>
+            <input type="text" id="custRua" placeholder="Ex: Rua das Palmeiras" autocomplete="address-line1">
+          </div>
+          <div class="ticket-address-field ticket-address-number">
+            <label for="custNumero">Numero</label>
+            <input type="text" id="custNumero" inputmode="numeric" placeholder="123" autocomplete="address-line2">
+          </div>
+        </div>
+        <p class="ticket-location-note">Entregas somente em Ipatinga - MG.</p>
         <div class="ticket-pay-field">
           <label for="payMethod">Forma de pagamento</label>
           <select id="payMethod" autocomplete="off">

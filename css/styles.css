@@ -413,7 +413,11 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
 }
 .ticket-head h3{font-family:'Rye',serif; font-size:1.12rem;}
 .close-x{background:none; font-size:1.35rem; color:var(--ticket-ink); line-height:1; width:44px; height:44px; margin-right:-8px;}
-.ticket-scroll{overflow-y:auto; flex:1; padding-bottom:10px; min-height:0; -webkit-overflow-scrolling:touch; overscroll-behavior:contain;}
+.ticket-scroll{
+  overflow-y:auto; flex:1; padding-bottom:10px; min-height:0;
+  -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
+  scroll-padding-bottom:160px;
+}
 .ticket-items{padding-bottom:2px;}
 .ticket-empty{text-align:center; color:#7a6f5e; padding:24px 0; font-size:.85rem; line-height:1.5;}
 .ticket-empty button{
@@ -470,6 +474,22 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
 }
 .ticket-name-field input:focus{outline:none; border-color:var(--orange);}
 .ticket-name-field input.error{border-color:#c0392b; background:#fff3f1;}
+.ticket-address-row{display:grid; grid-template-columns:1fr 120px; gap:8px;}
+.ticket-address-field{margin:10px 0 4px;}
+.ticket-address-field label{
+  font-size:.7rem; text-transform:uppercase; letter-spacing:.05em;
+  display:block; margin-bottom:6px; color:#5c5344; font-family:'Karla',sans-serif; font-weight:700;
+}
+.ticket-address-field input{
+  width:100%; padding:12px; border:1px solid #c8bca6; border-radius:8px;
+  background:#fffaf1; font-family:'Karla',sans-serif; font-size:16px; color:var(--ticket-ink);
+}
+.ticket-address-field input:focus{outline:none; border-color:var(--orange);}
+.ticket-address-field input.error{border-color:#c0392b; background:#fff3f1;}
+.ticket-address-number input{text-align:center;}
+.ticket-location-note{
+  font-family:'Karla',sans-serif; font-size:.72rem; color:#8a7d6a; margin-top:4px;
+}
 .ticket-meta-toggle{
   width:100%; display:flex; align-items:center; justify-content:space-between;
   border:1px solid #d7cbb6; border-radius:8px; background:#fffaf1;
@@ -535,6 +555,7 @@ body.menu-open .ig-fab{opacity:0; pointer-events:none;}
   .card .photo{width:96px; min-width:96px; min-height:96px;}
   .add-btn{font-size:.68rem;}
   .logo-wordmark{height:36px; max-width:150px;}
+  .ticket-address-row{grid-template-columns:1fr 96px;}
 }
 @media (max-width: 340px){
   .card-actions{flex-wrap:wrap;}
