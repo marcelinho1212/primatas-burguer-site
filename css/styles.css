@@ -532,7 +532,7 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
 }
 .ticket-name-field input:focus{outline:none; border-color:var(--orange);}
 .ticket-name-field input.error{border-color:#c0392b; background:#fff3f1;}
-.ticket-address-row{display:grid; grid-template-columns:1fr 120px; gap:8px;}
+.ticket-address-row{display:grid; grid-template-columns:minmax(0,1fr) 110px; gap:8px;}
 .ticket-address-field{margin:10px 0 4px;}
 .ticket-address-field label{
   font-size:.7rem; text-transform:uppercase; letter-spacing:.05em;
@@ -631,7 +631,19 @@ body.menu-open .ig-fab{opacity:0; pointer-events:none;}
   .card .photo{width:96px; min-width:96px; min-height:96px;}
   .add-btn{font-size:.68rem;}
   .logo-wordmark{height:36px; max-width:150px;}
-  .ticket-address-row{grid-template-columns:1fr 96px;}
+  .ticket-address-row{grid-template-columns:1fr;}
+  .ticket-address-number input{text-align:left;}
+}
+
+@media (max-width: 480px){
+  .ticket-step-data .ticket-scroll-data{padding-bottom:22px;}
+  .ticket-address-row{grid-template-columns:1fr;}
+  .ticket-address-number input{text-align:left;}
+  .ticket-name-field input,
+  .ticket-address-field input,
+  .ticket-pay-field select{
+    font-size:15px;
+  }
 }
 @media (max-width: 340px){
   .card-actions{flex-wrap:wrap;}

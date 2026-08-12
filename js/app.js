@@ -37,9 +37,11 @@ const qtyState = {};
 let sheetQty = 1;
 let ticketStep = "items";
 const ipatingaFallbackBairros = [
-  "Bethania", "Bom Jardim", "Canaa", "Caravelas", "Cidade Nobre", "Esperanca",
-  "Horto", "Iguacu", "Ideal", "Imbaubas", "Ipanema", "Jardim Panorama",
-  "Limoeiro", "Novo Cruzeiro", "Parque das Aguas", "Veneza", "Vila Celeste"
+  "Barra Alegre", "Bela Vista", "Bethania", "Bom Jardim", "Bom Retiro", "Canaa", "Caravelas",
+  "Chacara Madalena", "Cidade Nobre", "Esperanca", "Forquilha", "Horto", "Iguacu", "Ideal",
+  "Imbaubas", "Ipanema", "Jardim Panorama", "Limoeiro", "Nova Esperanca", "Novo Cruzeiro",
+  "Parque das Aguas", "Recanto", "Vale do Sol", "Vagalume", "Veneza", "Vila Celeste",
+  "Vila Formosa", "Vila Militar"
 ];
 
 function brl(v){ return "R$ " + v.toFixed(2).replace(".", ","); }
