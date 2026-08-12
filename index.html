@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFF7F0">
+<meta name="description" content="Cardápio digital da Primatas Burguer em Ipatinga. Monte o pedido e envie no WhatsApp.">
+<title>Primatas Burguer — Cardápio</title>
+<link rel="icon" href="images/iconeprimatas.png" type="image/png">
+<link rel="apple-touch-icon" href="images/iconeprimatas.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rye&family=Space+Mono:wght@400;700&family=Karla:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="nav-side" aria-hidden="true"></div>
+  <a class="logo" href="#inicio" data-view="inicio">
+    <img class="logo-mark" src="images/iconeprimatas.png" alt="">
+    <img class="logo-wordmark" src="images/primatas.png" alt="Primatas Burguer">
+  </a>
+  <div class="nav-side nav-side-end">
+    <div class="nav-desktop">
+      <button type="button" class="nav-link active" data-view="inicio">Início</button>
+      <button type="button" class="nav-link" data-view="cardapio">Cardápio</button>
+      <a class="nav-link" href="https://instagram.com/primatasburguer_ipa" target="_blank" rel="noopener noreferrer">Instagram</a>
+      <button type="button" class="btn btn-primary nav-order" data-view="cardapio">Pedir agora</button>
+    </div>
+    <button type="button" class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="siteMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="menu-backdrop" id="menuBackdrop"></div>
+<aside class="site-menu" id="siteMenu" aria-label="Menu">
+  <button type="button" class="menu-link nav-link active" data-view="inicio">Início</button>
+  <button type="button" class="menu-link nav-link" data-view="cardapio">Cardápio</button>
+  <a class="menu-link" href="https://instagram.com/primatasburguer_ipa" target="_blank" rel="noopener noreferrer">Instagram</a>
+  <button type="button" class="btn btn-primary menu-cta" data-view="cardapio">Pedir agora</button>
+</aside>
+
+<div id="view-inicio" class="view active">
+  <div class="hero">
+    <div class="hero-banner" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <span class="eyebrow">Fogo, brioche e instinto</span>
+      <h1>O instinto pede.<br><span>A gente entrega.</span></h1>
+      <p>Blends selados na brasa, pão amanteigado e recheios que não fazem média. Feito na chapa, do jeito que hambúrguer tem que ser.</p>
+      <div class="cta-row">
+        <button type="button" class="btn btn-primary" data-view="cardapio">Pedir agora</button>
+        <a class="btn btn-ghost" href="https://instagram.com/primatasburguer_ipa" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>
+          Instagram
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <section id="sobre">
+    <div class="section-head">
+      <span class="eyebrow">Quem tá na chapa</span>
+      <h2>Sobre o fundador</h2>
+    </div>
+    <div class="founder">
+      <div class="founder-photo-wrap">
+        <img class="founder-photo" src="images/fundador.jpeg" alt="Kallyston Silva, fundador da Primatas Burguer, na chapa de um evento">
+        <div class="founder-stamp">DESDE<br>SEMPRE<br>NA BRASA</div>
+      </div>
+      <div class="founder-text">
+        <h3 class="name">Kallyston Silva</h3>
+        <span class="role">Fundador &amp; Chapeiro-chefe</span>
+        <p>23 anos, nascido em Ipatinga e morador do bairro Esperança. Antes de abrir a Primatas, Kallyston rodou eventos de churrasco por Minas Gerais inteiro, passando por várias edições e feiras gastronômicas.</p>
+        <p>Foi ali, no meio da fumaça e da brasa, que ele decidiu trazer toda essa vivência para dentro do hambúrguer: técnica de chapa, tempero de churrasqueiro e o instinto de quem já serviu multidão.</p>
+        <p>A Primatas Burguer nasceu desse histórico — cada blend selado carrega um pouco de cada evento por onde ele passou.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider-strip"><span>Na chapa desde o primeiro pedido</span></div>
+
+  <section>
+    <div class="about-grid">
+      <div class="about-card">
+        <span class="num">Origem</span>
+        <h3>Ipatinga, MG</h3>
+        <p>Raiz na estrada dos eventos de churrasco por todo o estado de Minas Gerais.</p>
+      </div>
+      <div class="about-card">
+        <span class="num">Método</span>
+        <h3>Selado na manteiga</h3>
+        <p>Pão de brioche selado na chapa e blend 150g grelhado no ponto, sempre.</p>
+      </div>
+      <div class="about-card">
+        <span class="num">Pedido</span>
+        <h3>Direto pro WhatsApp</h3>
+        <p>Escolhe no cardápio, confere a ficha e manda pra gente. Sem cadastro, sem enrolação.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <img class="footer-logo" src="images/iconeprimatas.png" alt="">
+    <img class="footer-wordmark" src="images/primatas.png" alt="Primatas Burguer">
+    O instinto pede, a gente entrega.
+    <div class="footer-links">
+      <a href="https://instagram.com/primatasburguer_ipa" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>
+        Instagram
+      </a>
+      <a href="#cardapio" data-view="cardapio">Cardápio</a>
+    </div>
+    <div class="handle">@primatasburguer_ipa · Ipatinga, MG</div>
+  </footer>
+</div>
+
+<div id="view-cardapio" class="view">
+  <div class="menu-cats" id="menuCats">
+    <button type="button" class="cat-btn active" data-cat="burgers">Burgers</button>
+    <button type="button" class="cat-btn" data-cat="fritas">Fritas</button>
+    <button type="button" class="cat-btn" data-cat="bebidas">Bebidas</button>
+  </div>
+  <p class="combo-hint">Toque no lanche pra ver os ingredientes. Ou adicione direto. A gente lembra de <strong>fritas e bebida</strong> na hora de fechar.</p>
+
+  <div class="menu-section">
+    <div id="cat-burgers" class="cat-block">
+      <h2 class="cat-title">Burgers <span class="tag">na brasa</span></h2>
+      <div class="grid" id="grid-burgers"></div>
+    </div>
+    <div id="cat-fritas" class="cat-block">
+      <h2 class="cat-title">Fritas <span class="tag">acompanhamento</span></h2>
+      <div class="grid" id="grid-fritas"></div>
+    </div>
+    <div id="cat-bebidas" class="cat-block">
+      <h2 class="cat-title">Bebidas <span class="tag">geladas</span></h2>
+      <div class="grid grid-compact" id="grid-bebidas"></div>
+    </div>
+  </div>
+</div>
+
+<a class="ig-fab" href="https://instagram.com/primatasburguer_ipa" target="_blank" rel="noopener noreferrer" aria-label="Abrir Instagram da Primatas Burguer">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"/></svg>
+  <span>Instagram</span>
+</a>
+
+<div id="cartBar" class="cart-bar" role="button" tabindex="0" aria-label="Ver pedido">
+  <div class="left">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7L5 3H2"/><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/></svg>
+    <span class="count" id="cartCount">0</span>
+    Ver pedido
+  </div>
+  <div class="right" id="cartTotal">R$ 0,00</div>
+</div>
+
+<div id="itemOverlay" class="overlay" aria-hidden="true">
+  <div class="item-sheet" role="dialog" aria-labelledby="itemName">
+    <div id="itemPhoto" class="item-photo"></div>
+    <div class="item-body">
+      <h3 id="itemName"></h3>
+      <span class="item-price" id="itemPrice"></span>
+      <p class="item-ing" id="itemIng"></p>
+      <div class="item-field" id="itemObsWrap">
+        <label for="itemObs">Observação (opcional)</label>
+        <input type="text" id="itemObs" placeholder="Ex: sem cebola, ponto da carne...">
+      </div>
+    </div>
+    <div class="item-footer">
+      <div class="stepper">
+        <button type="button" id="itemQtyMinus" aria-label="Diminuir">–</button>
+        <span id="itemQty">1</span>
+        <button type="button" id="itemQtyPlus" aria-label="Aumentar">+</button>
+      </div>
+      <button type="button" class="add-btn" id="itemAdd">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<div id="overlay" class="overlay">
+  <div class="ticket" role="dialog" aria-labelledby="ticketTitle">
+    <div class="ticket-grab" aria-hidden="true"></div>
+    <div class="ticket-head">
+      <h3 id="ticketTitle">Ficha do pedido</h3>
+      <button type="button" class="close-x" id="closeTicket" aria-label="Fechar">✕</button>
+    </div>
+    <div class="ticket-scroll">
+      <div class="ticket-items" id="ticketItems"></div>
+      <div id="ticketUpsells"></div>
+    </div>
+    <div class="ticket-footer">
+      <button type="button" class="ticket-meta-toggle" id="ticketMetaToggle" aria-expanded="true" aria-controls="ticketMetaFields">
+        Dados para envio
+      </button>
+      <div class="ticket-meta-fields" id="ticketMetaFields">
+        <div class="ticket-name-field">
+          <label for="custName">Seu nome</label>
+          <input type="text" id="custName" placeholder="Como te chamamos no pedido?" autocomplete="name">
+          <p class="name-hint">A gente usa pra identificar o pedido no WhatsApp.</p>
+        </div>
+        <div class="ticket-pay-field">
+          <label for="payMethod">Forma de pagamento</label>
+          <select id="payMethod" autocomplete="off">
+            <option value="">Selecione...</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Pix">Pix</option>
+            <option value="Cartão">Cartão</option>
+          </select>
+        </div>
+      </div>
+      <div class="ticket-total">
+        <span>Total</span>
+        <span id="ticketTotal">R$ 0,00</span>
+      </div>
+      <button type="button" class="send-btn" id="sendBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5L3.6 10.6c-.7.3-.7 1.3.1 1.5l4.3 1.3 1.6 5.1c.2.7 1.1.9 1.6.3l2.3-2.6 4.5 3.3c.6.4 1.5.1 1.7-.6L21.8 4.4c.2-.8-.6-1.5-1.3-.9z"/></svg>
+        Enviar pedido no WhatsApp
+      </button>
+      <p class="send-note">Você é redirecionado pro WhatsApp com o pedido pronto.</p>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
