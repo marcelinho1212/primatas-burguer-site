@@ -183,15 +183,30 @@
       <h3 id="ticketTitle">Ficha do pedido</h3>
       <button type="button" class="close-x" id="closeTicket" aria-label="Fechar">✕</button>
     </div>
-    <div class="ticket-scroll">
-      <div class="ticket-items" id="ticketItems"></div>
-      <div id="ticketUpsells"></div>
+    <div class="ticket-steps-nav" role="tablist" aria-label="Etapas do pedido">
+      <button type="button" class="ticket-step-tab active" id="tabStepItems" aria-selected="true">1. Pedido</button>
+      <button type="button" class="ticket-step-tab" id="tabStepData" aria-selected="false">2. Dados</button>
     </div>
-    <div class="ticket-footer">
-      <button type="button" class="ticket-meta-toggle" id="ticketMetaToggle" aria-expanded="true" aria-controls="ticketMetaFields">
-        Dados para envio
-      </button>
-      <div class="ticket-meta-fields" id="ticketMetaFields">
+    <div class="ticket-step-status" id="ticketStepStatus" aria-live="polite">🍔 Etapa 1 de 2: Revise seu pedido</div>
+    <div class="ticket-progress" aria-hidden="true">
+      <span class="ticket-progress-bar" id="ticketProgressBar"></span>
+    </div>
+    <div class="ticket-step active" id="ticketStepItems" aria-hidden="false">
+      <div class="ticket-scroll">
+        <div class="ticket-items" id="ticketItems"></div>
+        <div id="ticketUpsells"></div>
+      </div>
+      <div class="ticket-footer ticket-footer-step1">
+        <div class="ticket-total">
+          <span>Total</span>
+          <span id="ticketTotal">R$ 0,00</span>
+        </div>
+        <button type="button" class="next-btn" id="goToDataBtn">Continuar para dados</button>
+      </div>
+    </div>
+    <div class="ticket-step" id="ticketStepData" aria-hidden="true">
+      <div class="ticket-scroll ticket-scroll-data">
+        <div class="ticket-meta-fields" id="ticketMetaFields">
         <div class="ticket-name-field">
           <label for="custName">Seu nome</label>
           <input type="text" id="custName" placeholder="Como te chamamos no pedido?" autocomplete="name">
@@ -223,15 +238,19 @@
           </select>
         </div>
       </div>
-      <div class="ticket-total">
-        <span>Total</span>
-        <span id="ticketTotal">R$ 0,00</span>
       </div>
-      <button type="button" class="send-btn" id="sendBtn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5L3.6 10.6c-.7.3-.7 1.3.1 1.5l4.3 1.3 1.6 5.1c.2.7 1.1.9 1.6.3l2.3-2.6 4.5 3.3c.6.4 1.5.1 1.7-.6L21.8 4.4c.2-.8-.6-1.5-1.3-.9z"/></svg>
-        Enviar pedido no WhatsApp
-      </button>
-      <p class="send-note">Você é redirecionado pro WhatsApp com o pedido pronto.</p>
+      <div class="ticket-footer ticket-footer-step2">
+        <button type="button" class="back-btn" id="backToItemsBtn">Voltar para pedido</button>
+        <div class="ticket-total ticket-total-confirm">
+          <span>Total do pedido</span>
+          <span id="ticketTotalConfirm">R$ 0,00</span>
+        </div>
+        <button type="button" class="send-btn" id="sendBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5L3.6 10.6c-.7.3-.7 1.3.1 1.5l4.3 1.3 1.6 5.1c.2.7 1.1.9 1.6.3l2.3-2.6 4.5 3.3c.6.4 1.5.1 1.7-.6L21.8 4.4c.2-.8-.6-1.5-1.3-.9z"/></svg>
+          Enviar pedido no WhatsApp
+        </button>
+        <p class="send-note">Você será redirecionado com o pedido completo e formatado.</p>
+      </div>
     </div>
   </div>
 </div>

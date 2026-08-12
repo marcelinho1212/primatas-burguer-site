@@ -35,7 +35,7 @@ let lockY = 0;
 let openSheet = null;
 const qtyState = {};
 let sheetQty = 1;
-let ticketMetaCollapsed = false;
+let ticketStep = "items";
 const ipatingaFallbackBairros = [
   "Bethania", "Bom Jardim", "Canaa", "Caravelas", "Cidade Nobre", "Esperanca",
   "Horto", "Iguacu", "Ideal", "Imbaubas", "Ipanema", "Jardim Panorama",
@@ -235,7 +235,12 @@ function renderCart(){
   }
   renderUpsells();
   document.getElementById("ticketTotal").textContent = brl(cartTotal());
+  const confirmTotal = document.getElementById("ticketTotalConfirm");
+  if(confirmTotal) confirmTotal.textContent = brl(cartTotal());
   document.getElementById("sendBtn").disabled = cart.length===0;
+  const goToDataBtn = document.getElementById("goToDataBtn");
+  if(goToDataBtn) goToDataBtn.disabled = cart.length===0;
+  if(cart.length === 0 && ticketStep === "data") setTicketStep("items");
   requestAnimationFrame(measureChrome);
 }
 
@@ -287,6 +292,7 @@ function unlockPage(){
 function openTicket(){
   closeMenu();
   closeItem(true);
+  setTicketStep("items");
   document.getElementById("overlay").classList.add("show");
   lockPage();
 }
@@ -352,22 +358,46 @@ function ensureInputVisible(field){
   }, 220);
 }
 
-function setTicketMetaCollapsed(collapsed){
-  ticketMetaCollapsed = collapsed;
-  const footer = document.querySelector(".ticket-footer");
-  const toggle = document.getElementById("ticketMetaToggle");
-  if(!footer || !toggle) return;
-  footer.classList.toggle("collapsed", collapsed);
-  toggle.setAttribute("aria-expanded", String(!collapsed));
+function setTicketStep(step){
+  ticketStep = step;
+  const isItems = step === "items";
+  const itemsStep = document.getElementById("ticketStepItems");
+  const dataStep = document.getElementById("ticketStepData");
+  const tabItems = document.getElementById("tabStepItems");
+  const tabData = document.getElementById("tabStepData");
+  const progressBar = document.getElementById("ticketProgressBar");
+  const stepStatus = document.getElementById("ticketStepStatus");
+  if(!itemsStep || !dataStep || !tabItems || !tabData) return;
+  itemsStep.classList.toggle("active", isItems);
+  dataStep.classList.toggle("active", !isItems);
+  itemsStep.classList.remove("entering");
+  dataStep.classList.remove("entering");
+  (isItems ? itemsStep : dataStep).classList.add("entering");
+  setTimeout(() => {
+    itemsStep.classList.remove("entering");
+    dataStep.classList.remove("entering");
+  }, 230);
+  itemsStep.setAttribute("aria-hidden", String(!isItems));
+  dataStep.setAttribute("aria-hidden", String(isItems));
+  tabItems.classList.toggle("active", isItems);
+  tabData.classList.toggle("active", !isItems);
+  tabItems.setAttribute("aria-selected", String(isItems));
+  tabData.setAttribute("aria-selected", String(!isItems));
+  if(progressBar) progressBar.style.width = isItems ? "50%" : "100%";
+  if(stepStatus){
+    stepStatus.textContent = isItems
+      ? "🍔 Etapa 1 de 2: Revise seu pedido"
+      : "📍 Etapa 2 de 2: Preencha seus dados";
+  }
 }
 
-function toggleTicketMeta(){
-  setTicketMetaCollapsed(!ticketMetaCollapsed);
+function goToDataStep(){
+  if(cart.length === 0) return;
+  setTicketStep("data");
 }
 
-function syncTicketMetaForViewport(){
-  const isDesktop = window.matchMedia("(min-width: 720px)").matches;
-  setTicketMetaCollapsed(!isDesktop);
+function goToItemsStep(){
+  setTicketStep("items");
 }
 
 function openItem(cat, id){
@@ -413,6 +443,7 @@ function sendOrder(){
   if(!name){
     nameInput.classList.add("error");
     nameInput.focus();
+    setTicketStep("data");
     return;
   }
   nameInput.classList.remove("error");
@@ -424,19 +455,19 @@ function sendOrder(){
   if(!bairroVal){
     bairro.classList.add("error");
     bairro.focus();
-    setTicketMetaCollapsed(false);
+    setTicketStep("data");
     return;
   }
   if(!ruaVal){
     rua.classList.add("error");
     rua.focus();
-    setTicketMetaCollapsed(false);
+    setTicketStep("data");
     return;
   }
   if(!numeroVal){
     numero.classList.add("error");
     numero.focus();
-    setTicketMetaCollapsed(false);
+    setTicketStep("data");
     return;
   }
   const payMethodEl = document.getElementById("payMethod");
@@ -444,19 +475,25 @@ function sendOrder(){
   if(!payMethod){
     payMethodEl.classList.add("error");
     payMethodEl.focus();
-    setTicketMetaCollapsed(false);
+    setTicketStep("data");
     return;
   }
   payMethodEl.classList.remove("error");
-  let msg = "🦍🔥 *Pedido — Primatas Burguer*\n\n";
-  msg += `*Nome:* ${name}\n\n`;
-  msg += `*Endereco:* Rua ${ruaVal}, ${numeroVal} - ${bairroVal}, Ipatinga/MG\n\n`;
-  msg += `*Forma de pagamento:* ${payMethod}\n\n`;
-  cart.forEach(i=>{
-    msg += `• ${i.qty}x ${i.name} — ${brl(i.price*i.qty)}\n`;
-    if(i.obs) msg += `   Obs: ${i.obs}\n`;
-  });
-  msg += `\n*Total: ${brl(cartTotal())}*`;
+  const lines = cart.map(i => {
+    const base = `- ${i.qty}x ${i.name} (${brl(i.price*i.qty)})`;
+    return i.obs ? `${base}\n  Obs: ${i.obs}` : base;
+  }).join("\n");
+
+  let msg = "*PRIMATAS BURGUER*\n";
+  msg += "Pedido via cardapio digital\n\n";
+  msg += "*CLIENTE*\n";
+  msg += `Nome: ${name}\n`;
+  msg += `Endereco: Rua ${ruaVal}, ${numeroVal} - ${bairroVal}, Ipatinga/MG\n`;
+  msg += `Pagamento: ${payMethod}\n\n`;
+  msg += "*ITENS*\n";
+  msg += `${lines}\n\n`;
+  msg += "*RESUMO*\n";
+  msg += `Total: ${brl(cartTotal())}`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
 }
 
@@ -531,7 +568,13 @@ function bindUI(){
     if(e.target.id === "itemOverlay") closeItem();
   });
   document.getElementById("closeTicket").addEventListener("click", closeTicket);
-  document.getElementById("ticketMetaToggle").addEventListener("click", toggleTicketMeta);
+  document.getElementById("goToDataBtn").addEventListener("click", goToDataStep);
+  document.getElementById("backToItemsBtn").addEventListener("click", goToItemsStep);
+  document.getElementById("tabStepItems").addEventListener("click", goToItemsStep);
+  document.getElementById("tabStepData").addEventListener("click", () => {
+    if(cart.length===0) return;
+    goToDataStep();
+  });
   document.getElementById("sendBtn").addEventListener("click", sendOrder);
   document.getElementById("itemAdd").addEventListener("click", addFromSheet);
   document.getElementById("itemQtyMinus").addEventListener("click", () => {
@@ -619,7 +662,7 @@ function bindUI(){
   }
   document.getElementById("overlay").addEventListener("focusin", (e) => {
     if(e.target.matches("input, select, textarea")){
-      setTicketMetaCollapsed(false);
+      if(e.target.closest("#ticketStepData")) setTicketStep("data");
       ensureInputVisible(e.target);
     }
   });
@@ -628,12 +671,6 @@ function bindUI(){
   });
 
   window.addEventListener("resize", () => { measureChrome(); syncOverlay(); });
-  window.addEventListener("orientationchange", syncTicketMetaForViewport);
-  let resizeMetaTimer;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeMetaTimer);
-    resizeMetaTimer = setTimeout(syncTicketMetaForViewport, 120);
-  });
   if(window.visualViewport){
     window.visualViewport.addEventListener("resize", () => {
       syncOverlay();
@@ -654,6 +691,6 @@ buildCards();
 bindUI();
 renderCart();
 loadIpatingaNeighborhoods();
-syncTicketMetaForViewport();
+setTicketStep("items");
 setupScrollSpy();
 measureChrome();

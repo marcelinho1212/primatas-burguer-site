@@ -413,11 +413,69 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
 }
 .ticket-head h3{font-family:'Rye',serif; font-size:1.12rem;}
 .close-x{background:none; font-size:1.35rem; color:var(--ticket-ink); line-height:1; width:44px; height:44px; margin-right:-8px;}
+.ticket-steps-nav{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin:0 0 10px;
+}
+.ticket-step-tab{
+  min-height:42px;
+  border:1px solid #d7cbb6;
+  border-radius:999px;
+  background:#fffaf1;
+  color:#6d6253;
+  font-family:'Karla',sans-serif;
+  font-weight:700;
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
+.ticket-step-tab.active{
+  background:var(--orange);
+  border-color:var(--orange);
+  color:#fff;
+}
+.ticket-step-status{
+  margin:0 0 8px;
+  padding:6px 10px;
+  border:1px solid #e2d6c2;
+  border-radius:8px;
+  background:#fffaf1;
+  color:#6d6253;
+  font-family:'Karla',sans-serif;
+  font-size:.78rem;
+  font-weight:700;
+}
+.ticket-progress{
+  width:100%;
+  height:6px;
+  border-radius:999px;
+  background:#eadfcf;
+  margin:0 0 10px;
+  overflow:hidden;
+}
+.ticket-progress-bar{
+  display:block;
+  height:100%;
+  width:50%;
+  border-radius:inherit;
+  background:linear-gradient(90deg, var(--orange), var(--orange-hot));
+  transition:width .26s ease;
+}
+.ticket-step{display:none; min-height:0; flex:1;}
+.ticket-step.active{display:flex; flex-direction:column;}
+.ticket-step.entering{animation:ticketStepIn .22s ease;}
+@keyframes ticketStepIn{
+  from{opacity:0; transform:translateY(8px);}
+  to{opacity:1; transform:translateY(0);}
+}
 .ticket-scroll{
   overflow-y:auto; flex:1; padding-bottom:10px; min-height:0;
   -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
   scroll-padding-bottom:160px;
 }
+.ticket-scroll-data{padding-bottom:18px;}
 .ticket-items{padding-bottom:2px;}
 .ticket-empty{text-align:center; color:#7a6f5e; padding:24px 0; font-size:.85rem; line-height:1.5;}
 .ticket-empty button{
@@ -490,17 +548,7 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
 .ticket-location-note{
   font-family:'Karla',sans-serif; font-size:.72rem; color:#8a7d6a; margin-top:4px;
 }
-.ticket-meta-toggle{
-  width:100%; display:flex; align-items:center; justify-content:space-between;
-  border:1px solid #d7cbb6; border-radius:8px; background:#fffaf1;
-  padding:10px 12px; color:#5c5344; font-family:'Karla',sans-serif;
-  font-size:.82rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
-  min-height:44px;
-}
-.ticket-meta-toggle::after{content:"▲"; font-size:.7rem; color:#8a7d6a;}
-.ticket-meta-fields{overflow:hidden; max-height:280px; transition:max-height .22s ease, opacity .18s ease; opacity:1;}
-.ticket-footer.collapsed .ticket-meta-fields{max-height:0; opacity:0;}
-.ticket-footer.collapsed .ticket-meta-toggle::after{content:"▼";}
+.ticket-meta-fields{display:block;}
 .ticket-pay-field{margin:10px 0 4px;}
 .ticket-pay-field label{
   font-size:.7rem; text-transform:uppercase; letter-spacing:.05em;
@@ -518,6 +566,34 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
   border-top:2px dashed #b8ab97; padding:12px 0; font-size:1rem; font-weight:700;
 }
 .ticket-footer{padding-bottom:calc(12px + var(--safe-b)); flex-shrink:0; background:var(--ticket);}
+.ticket-footer-step1{padding-top:6px;}
+.next-btn{
+  width:100%;
+  min-height:48px;
+  border-radius:10px;
+  background:var(--orange);
+  color:#fff;
+  font-family:'Karla',sans-serif;
+  font-weight:700;
+  font-size:.88rem;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+}
+.next-btn:disabled{opacity:.45;}
+.back-btn{
+  width:100%;
+  min-height:44px;
+  border-radius:10px;
+  border:1px solid #d7cbb6;
+  background:#fffaf1;
+  color:#5c5344;
+  font-family:'Karla',sans-serif;
+  font-weight:700;
+  font-size:.78rem;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+}
+.ticket-total-confirm{margin-top:10px;}
 .send-btn{
   width:100%; background:#1F8B4C; color:#fff; padding:14px 12px; border-radius:10px;
   font-family:'Karla',sans-serif; font-weight:700; font-size:.88rem; text-transform:uppercase;
@@ -601,6 +677,8 @@ body.menu-open .ig-fab{opacity:0; pointer-events:none;}
   .overlay{align-items:center; padding:24px;}
   .ticket, .item-sheet{border-radius:16px; max-height:84vh;}
   .ticket{padding:18px 22px 0;}
+  .ticket-steps-nav{margin-bottom:12px;}
+  .ticket-step-tab{font-size:.82rem;}
   .ticket-grab{display:none;}
   .item-photo{height:240px;}
   .ig-fab{width:auto; height:auto; padding:12px 14px; border-radius:999px; gap:8px;}
