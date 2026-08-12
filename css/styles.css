@@ -475,7 +475,10 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
   -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
   scroll-padding-bottom:160px;
 }
-.ticket-scroll-data{padding-bottom:18px;}
+.ticket-scroll-data{
+  padding:8px 0 20px;
+  scroll-padding-bottom:220px;
+}
 .ticket-items{padding-bottom:2px;}
 .ticket-empty{text-align:center; color:#7a6f5e; padding:24px 0; font-size:.85rem; line-height:1.5;}
 .ticket-empty button{
@@ -533,7 +536,7 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
 .ticket-name-field input:focus{outline:none; border-color:var(--orange);}
 .ticket-name-field input.error{border-color:#c0392b; background:#fff3f1;}
 .ticket-address-row{display:grid; grid-template-columns:minmax(0,1fr) 110px; gap:8px;}
-.ticket-address-field{margin:10px 0 4px;}
+.ticket-address-field{margin:8px 0 2px;}
 .ticket-address-field label{
   font-size:.7rem; text-transform:uppercase; letter-spacing:.05em;
   display:block; margin-bottom:6px; color:#5c5344; font-family:'Karla',sans-serif; font-weight:700;
@@ -546,10 +549,14 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
 .ticket-address-field input.error{border-color:#c0392b; background:#fff3f1;}
 .ticket-address-number input{text-align:center;}
 .ticket-location-note{
-  font-family:'Karla',sans-serif; font-size:.72rem; color:#8a7d6a; margin-top:4px;
+  font-family:'Karla',sans-serif; font-size:.72rem; color:#8a7d6a; margin-top:2px;
 }
-.ticket-meta-fields{display:block;}
-.ticket-pay-field{margin:10px 0 4px;}
+.ticket-meta-fields{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+.ticket-pay-field{margin:8px 0 2px;}
 .ticket-pay-field label{
   font-size:.7rem; text-transform:uppercase; letter-spacing:.05em;
   display:block; margin-bottom:6px; color:#5c5344; font-family:'Karla',sans-serif; font-weight:700;
@@ -567,6 +574,13 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
 }
 .ticket-footer{padding-bottom:calc(12px + var(--safe-b)); flex-shrink:0; background:var(--ticket);}
 .ticket-footer-step1{padding-top:6px;}
+.ticket-footer-step2{
+  position:sticky;
+  bottom:0;
+  z-index:2;
+  padding-top:10px;
+  box-shadow:0 -10px 24px rgba(40,24,12,.08);
+}
 .next-btn{
   width:100%;
   min-height:48px;
@@ -644,6 +658,12 @@ body.menu-open .ig-fab{opacity:0; pointer-events:none;}
   .ticket-pay-field select{
     font-size:15px;
   }
+  .ticket-step-status{font-size:.75rem;}
+  .ticket-steps-nav{gap:6px;}
+  .ticket-step-tab{font-size:.72rem; min-height:40px;}
+  .ticket-footer-step2{padding-top:8px;}
+  .ticket-total{padding:10px 0;}
+  .ticket-scroll{scroll-padding-bottom:240px;}
 }
 @media (max-width: 340px){
   .card-actions{flex-wrap:wrap;}

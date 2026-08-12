@@ -36,6 +36,7 @@ let openSheet = null;
 const qtyState = {};
 let sheetQty = 1;
 let ticketStep = "items";
+const DELIVERY_FEE = 5.00;
 const ipatingaFallbackBairros = [
   "Barra Alegre", "Bela Vista", "Bethania", "Bom Jardim", "Bom Retiro", "Canaa", "Caravelas",
   "Chacara Madalena", "Cidade Nobre", "Esperanca", "Forquilha", "Horto", "Iguacu", "Ideal",
@@ -154,6 +155,21 @@ function cartTotal(){
   return cart.reduce((s,i)=> s + i.price*i.qty, 0);
 }
 
+function orderSubtotal(){
+  return cartTotal();
+}
+
+function orderTotal(){
+  return orderSubtotal() + DELIVERY_FEE;
+}
+
+function categoryLabel(cat){
+  if(cat === "burgers") return "Hamburgueres";
+  if(cat === "fritas") return "Fritas";
+  if(cat === "bebidas") return "Bebidas";
+  return cat;
+}
+
 function cartHasCat(cat){
   return cart.some(i => i.cat === cat);
 }
@@ -236,9 +252,9 @@ function renderCart(){
       </div>`).join("");
   }
   renderUpsells();
-  document.getElementById("ticketTotal").textContent = brl(cartTotal());
+  document.getElementById("ticketTotal").textContent = brl(orderTotal());
   const confirmTotal = document.getElementById("ticketTotalConfirm");
-  if(confirmTotal) confirmTotal.textContent = brl(cartTotal());
+  if(confirmTotal) confirmTotal.textContent = brl(orderTotal());
   document.getElementById("sendBtn").disabled = cart.length===0;
   const goToDataBtn = document.getElementById("goToDataBtn");
   if(goToDataBtn) goToDataBtn.disabled = cart.length===0;
@@ -485,6 +501,10 @@ function sendOrder(){
     const base = `- ${i.qty}x ${i.name} (${brl(i.price*i.qty)})`;
     return i.obs ? `${base}\n  Obs: ${i.obs}` : base;
   }).join("\n");
+  const categoryTotals = cart.reduce((acc, item) => {
+    acc[item.cat] = (acc[item.cat] || 0) + item.price * item.qty;
+    return acc;
+  }, {});
 
   let msg = "*PRIMATAS BURGUER*\n";
   msg += "Pedido via cardapio digital\n\n";
@@ -492,10 +512,14 @@ function sendOrder(){
   msg += `Nome: ${name}\n`;
   msg += `Endereco: Rua ${ruaVal}, ${numeroVal} - ${bairroVal}, Ipatinga/MG\n`;
   msg += `Pagamento: ${payMethod}\n\n`;
-  msg += "*ITENS*\n";
+  msg += "*ITENS COBRADOS*\n";
   msg += `${lines}\n\n`;
   msg += "*RESUMO*\n";
-  msg += `Total: ${brl(cartTotal())}`;
+  Object.entries(categoryTotals).forEach(([cat, total]) => {
+    msg += `${categoryLabel(cat)}: ${brl(total)}\n`;
+  });
+  msg += `Taxa de entrega: ${brl(DELIVERY_FEE)}\n`;
+  msg += `*Total: ${brl(orderTotal())}*`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
 }
 
@@ -665,7 +689,6 @@ function bindUI(){
   document.getElementById("overlay").addEventListener("focusin", (e) => {
     if(e.target.matches("input, select, textarea")){
       if(e.target.closest("#ticketStepData")) setTicketStep("data");
-      ensureInputVisible(e.target);
     }
   });
   document.getElementById("itemOverlay").addEventListener("focusin", (e) => {
