@@ -20,12 +20,12 @@ const MENU = {
       ing:"Batatas fritas crocantes, servidas na cesta com maionese da casa."},
   ],
   bebidas: [
-    {id:"guarana350", name:"Guaraná 350ml", tagline:"", price:7.00, img:"", ing:"Lata gelada.", emoji:"🥤"},
-    {id:"coca350", name:"Coca-Cola 350ml", tagline:"", price:7.00, img:"", ing:"Lata gelada.", emoji:"🥤"},
-    {id:"cocazero350", name:"Coca-Cola Zero 350ml", tagline:"", price:7.00, img:"", ing:"Lata gelada.", emoji:"🥤"},
-    {id:"coca600", name:"Coca-Cola 600ml", tagline:"", price:9.00, img:"", ing:"Garrafa gelada.", emoji:"🥤"},
-    {id:"cocazero600", name:"Coca-Cola Zero 600ml", tagline:"", price:9.00, img:"", ing:"Garrafa gelada.", emoji:"🥤"},
-    {id:"agua", name:"Água com gás", tagline:"", price:5.00, img:"", ing:"Geladinha.", emoji:"💧"},
+    {id:"guarana350", name:"Guaraná 350ml", tagline:"", price:7.00, img:"images/Guarana_Antarctica_350ml.jpg", ing:"Lata gelada.", emoji:"🥤"},
+    {id:"coca350", name:"Coca-Cola 350ml", tagline:"", price:7.00, img:"images/Coca_Cola_350ml.jpg", ing:"Lata gelada.", emoji:"🥤"},
+    {id:"cocazero350", name:"Coca-Cola Zero 350ml", tagline:"", price:7.00, img:"images/coca-zero-350-ml.png", ing:"Lata gelada.", emoji:"🥤"},
+    {id:"coca600", name:"Coca-Cola 600ml", tagline:"", price:9.00, img:"images/coca-600.png", ing:"Garrafa gelada.", emoji:"🥤"},
+    {id:"cocazero600", name:"Coca-Cola Zero 600ml", tagline:"", price:9.00, img:"images/coca-zero-600.png", ing:"Garrafa gelada.", emoji:"🥤"},
+    {id:"agua", name:"Água com gás", tagline:"", price:5.00, img:"images/Agua_com_Gas_500ml.jpg", ing:"Geladinha.", emoji:"💧"},
   ]
 };
 
