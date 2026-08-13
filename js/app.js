@@ -170,6 +170,56 @@ function categoryLabel(cat){
   return cat;
 }
 
+function itemPreviewHTML(item){
+  const menuItem = findItem(item.cat, item.id);
+  if(menuItem && menuItem.img){
+    return `<div class="t-item-photo"><img src="${menuItem.img}" alt="${item.name}"></div>`;
+  }
+  return `<div class="t-item-photo"><span class="t-item-emoji">${menuItem?.emoji || "🍔"}</span></div>`;
+}
+
+function renderChargesSummary(){
+  const wrap = document.getElementById("ticketCharges");
+  if(!wrap) return;
+  if(cart.length === 0){
+    wrap.innerHTML = "";
+    return;
+  }
+
+  const categoryTotals = cart.reduce((acc, item) => {
+    acc[item.cat] = (acc[item.cat] || 0) + item.price * item.qty;
+    return acc;
+  }, {});
+
+  const categoryRows = Object.entries(categoryTotals).map(([cat, total]) => `
+    <div class="ticket-summary-row">
+      <span>${categoryLabel(cat)}</span>
+      <strong>${brl(total)}</strong>
+    </div>
+  `).join("");
+
+  wrap.innerHTML = `
+    <div class="ticket-summary-title">Resumo da cobrança <span>DETALHADO</span></div>
+    <div class="ticket-summary-list">
+      ${categoryRows}
+      <div class="ticket-summary-divider"></div>
+      <div class="ticket-summary-row">
+        <span>Subtotal</span>
+        <strong>${brl(orderSubtotal())}</strong>
+      </div>
+      <div class="ticket-summary-row">
+        <span>Taxa de entrega</span>
+        <strong>${brl(DELIVERY_FEE)}</strong>
+      </div>
+      <div class="ticket-summary-divider"></div>
+      <div class="ticket-summary-row ticket-summary-total">
+        <span>Total</span>
+        <strong>${brl(orderTotal())}</strong>
+      </div>
+    </div>
+  `;
+}
+
 function cartHasCat(cat){
   return cart.some(i => i.cat === cat);
 }
@@ -235,8 +285,14 @@ function renderCart(){
     wrap.innerHTML = cart.map(i => `
       <div class="t-item">
         <div class="t-item-top">
-          <span class="t-item-name">${i.name}</span>
-          <span>${brl(i.price*i.qty)}</span>
+          <div class="t-item-main">
+            ${itemPreviewHTML(i)}
+            <div>
+              <span class="t-item-name">${i.name}</span>
+              <span class="t-item-meta">${i.qty}x ${categoryLabel(i.cat)}</span>
+            </div>
+          </div>
+          <span class="t-item-price">${brl(i.price*i.qty)}</span>
         </div>
         <input class="t-item-obs" type="text" value="${i.obs.replace(/"/g,"&quot;")}"
           placeholder="${i.cat==="burgers" ? "Observação: sem cebola, ponto da carne..." : "Observação (opcional)"}"
@@ -252,6 +308,7 @@ function renderCart(){
       </div>`).join("");
   }
   renderUpsells();
+  renderChargesSummary();
   document.getElementById("ticketTotal").textContent = brl(orderTotal());
   const confirmTotal = document.getElementById("ticketTotalConfirm");
   if(confirmTotal) confirmTotal.textContent = brl(orderTotal());
@@ -699,8 +756,6 @@ function bindUI(){
   if(window.visualViewport){
     window.visualViewport.addEventListener("resize", () => {
       syncOverlay();
-      const active = document.activeElement;
-      if(active && active.matches && active.matches("input, select, textarea")) ensureInputVisible(active);
     });
     window.visualViewport.addEventListener("scroll", syncOverlay);
   }
