@@ -480,6 +480,10 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
   scroll-padding-bottom:260px;
   overflow-anchor:none;
 }
+.ticket-step-data{
+  min-height:0;
+  overflow:hidden;
+}
 .ticket-items{padding-bottom:2px;}
 .ticket-empty{text-align:center; color:#7a6f5e; padding:24px 0; font-size:.85rem; line-height:1.5;}
 .ticket-empty button{
@@ -705,15 +709,16 @@ body.menu-open .ig-fab{opacity:0; pointer-events:none;}
     padding-top:6px;
   }
   .ticket.mode-data .ticket-grab{display:none;}
-  .ticket.mode-data .ticket-head{padding-bottom:8px; margin-bottom:6px;}
-  .ticket.mode-data .ticket-steps-nav{margin-bottom:8px;}
-  .ticket.mode-data .ticket-step-status{margin-bottom:6px;}
-  .ticket.mode-data .ticket-progress{margin-bottom:8px;}
+  .ticket.mode-data .ticket-head{padding-bottom:8px; margin-bottom:4px;}
+  .ticket.mode-data .ticket-steps-nav{margin-bottom:6px;}
+  .ticket.mode-data .ticket-step-status{margin-bottom:4px;}
+  .ticket.mode-data .ticket-progress{margin-bottom:6px;}
   .ticket.mode-data .ticket-step-data{
     display:flex;
     flex-direction:column;
     min-height:0;
     flex:1;
+    overflow:hidden;
   }
   .ticket.mode-data .ticket-scroll-data{
     flex:1;
@@ -722,6 +727,8 @@ body.menu-open .ig-fab{opacity:0; pointer-events:none;}
     overflow-y:auto;
     padding:6px 0 24px;
     -webkit-overflow-scrolling:touch;
+    touch-action:pan-y;
+    overscroll-behavior-y:contain;
   }
   .ticket.mode-data .ticket-footer-step2{
     position:sticky;
@@ -748,7 +755,6 @@ body.menu-open .ig-fab{opacity:0; pointer-events:none;}
   .ticket-summary{padding:10px;}
   .ticket-summary-row{font-size:.84rem;}
   .ticket-summary-total strong{font-size:1rem;}
-  .ticket-step-data{overflow:hidden;}
   .ticket-scroll-data{max-height:calc(100dvh - 210px);}
 }
 @media (max-width: 340px){

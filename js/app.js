@@ -417,13 +417,28 @@ async function loadIpatingaNeighborhoods(){
   renderNeighborhoodOptions(ipatingaFallbackBairros);
 }
 
-function ensureInputVisible(field){
+function scrollFieldInsideTicket(field){
   if(!field) return;
-  const insideOverlay = field.closest("#overlay") || field.closest("#itemOverlay");
-  if(!insideOverlay) return;
-  setTimeout(() => {
-    field.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-  }, 220);
+  const scrollContainer = field.closest(".ticket-scroll-data");
+  if(!scrollContainer) return;
+
+  const fieldRect = field.getBoundingClientRect();
+  const containerRect = scrollContainer.getBoundingClientRect();
+  const topGap = 16;
+  const bottomGap = 24;
+  const visibleTop = containerRect.top + topGap;
+  const visibleBottom = containerRect.bottom - bottomGap;
+
+  if(fieldRect.top >= visibleTop && fieldRect.bottom <= visibleBottom) return;
+
+  const delta = fieldRect.top < visibleTop
+    ? fieldRect.top - visibleTop - 12
+    : fieldRect.bottom - visibleBottom + 12;
+
+  scrollContainer.scrollTo({
+    top: Math.max(0, scrollContainer.scrollTop + delta),
+    behavior: "smooth"
+  });
 }
 
 function setTicketStep(step){
@@ -740,11 +755,17 @@ function bindUI(){
   }
   document.getElementById("overlay").addEventListener("focusin", (e) => {
     if(e.target.matches("input, select, textarea")){
-      if(e.target.closest("#ticketStepData")) setTicketStep("data");
+      if(e.target.closest("#ticketStepData")){
+        setTicketStep("data");
+        setTimeout(() => scrollFieldInsideTicket(e.target), 60);
+      }
     }
   });
   document.getElementById("itemOverlay").addEventListener("focusin", (e) => {
-    if(e.target.matches("input, select, textarea")) ensureInputVisible(e.target);
+    if(e.target.matches("input, select, textarea")){
+      const insideItemSheet = e.target.closest(".item-body");
+      if(insideItemSheet) e.target.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    }
   });
 
   window.addEventListener("resize", () => { measureChrome(); syncOverlay(); });
