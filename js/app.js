@@ -330,18 +330,11 @@ function measureChrome(){
 
 function syncOverlay(){
   const overlays = [document.getElementById("overlay"), document.getElementById("itemOverlay")];
-  const vv = window.visualViewport;
   overlays.forEach(overlay => {
     if(!overlay) return;
-    if(overlay.classList.contains("show") && vv){
-      overlay.style.top = vv.offsetTop + "px";
-      overlay.style.height = vv.height + "px";
-      overlay.style.bottom = "auto";
-    } else {
-      overlay.style.top = "";
-      overlay.style.height = "";
-      overlay.style.bottom = "";
-    }
+    overlay.style.top = "";
+    overlay.style.height = "";
+    overlay.style.bottom = "";
   });
 }
 
@@ -436,12 +429,14 @@ function ensureInputVisible(field){
 function setTicketStep(step){
   ticketStep = step;
   const isItems = step === "items";
+  const ticket = document.querySelector(".ticket");
   const itemsStep = document.getElementById("ticketStepItems");
   const dataStep = document.getElementById("ticketStepData");
   const tabItems = document.getElementById("tabStepItems");
   const tabData = document.getElementById("tabStepData");
   const progressBar = document.getElementById("ticketProgressBar");
   const stepStatus = document.getElementById("ticketStepStatus");
+  if(ticket) ticket.classList.toggle("mode-data", !isItems);
   if(!itemsStep || !dataStep || !tabItems || !tabData) return;
   itemsStep.classList.toggle("active", isItems);
   dataStep.classList.toggle("active", !isItems);
@@ -757,7 +752,6 @@ function bindUI(){
     window.visualViewport.addEventListener("resize", () => {
       syncOverlay();
     });
-    window.visualViewport.addEventListener("scroll", syncOverlay);
   }
   document.addEventListener("keydown", (e) => {
     if(e.key !== "Escape") return;
