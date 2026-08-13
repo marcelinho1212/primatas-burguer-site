@@ -575,6 +575,38 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
 .ticket-location-note{
   font-family:'Karla',sans-serif; font-size:.72rem; color:#8a7d6a; margin-top:2px;
 }
+.bairro-autocomplete-wrap{position:relative;}
+.bairro-autocomplete{
+  position:absolute;
+  left:0;
+  right:0;
+  top:calc(100% + 4px);
+  z-index:30;
+  background:var(--surface);
+  border:1px solid #d7cbb6;
+  border-radius:10px;
+  box-shadow:0 12px 24px rgba(40,24,12,.12);
+  max-height:220px;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.bairro-autocomplete button{
+  width:100%;
+  display:block;
+  text-align:left;
+  padding:12px 14px;
+  font-family:'Karla',sans-serif;
+  font-size:.92rem;
+  color:var(--ink);
+  border-bottom:1px solid #eee2d3;
+  background:transparent;
+}
+.bairro-autocomplete button:last-child{border-bottom:none;}
+.bairro-autocomplete button:hover,
+.bairro-autocomplete button:focus{
+  background:#fff3e7;
+  outline:none;
+}
 .ticket-meta-fields{
   display:flex;
   flex-direction:column;
@@ -756,6 +788,7 @@ body.menu-open .ig-fab{opacity:0; pointer-events:none;}
   .ticket-summary-row{font-size:.84rem;}
   .ticket-summary-total strong{font-size:1rem;}
   .ticket-scroll-data{max-height:calc(100dvh - 210px);}
+  .bairro-autocomplete{max-height:180px;}
 }
 @media (max-width: 340px){
   .card-actions{flex-wrap:wrap;}

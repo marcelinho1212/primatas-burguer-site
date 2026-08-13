@@ -37,6 +37,8 @@ const qtyState = {};
 let sheetQty = 1;
 let ticketStep = "items";
 const DELIVERY_FEE = 5.00;
+let neighborhoodList = [];
+let neighborhoodHideTimer = null;
 const ipatingaFallbackBairros = [
   "Barra Alegre", "Bela Vista", "Bethania", "Bom Jardim", "Bom Retiro", "Canaa", "Caravelas",
   "Chacara Madalena", "Cidade Nobre", "Esperanca", "Forquilha", "Horto", "Iguacu", "Ideal",
@@ -385,12 +387,70 @@ function clearAddressErrors(){
   });
 }
 
+function getNeighborhoodInput(){
+  return document.getElementById("custBairro");
+}
+
+function getNeighborhoodSuggestions(){
+  return document.getElementById("bairroSuggestions");
+}
+
+function normalizeText(value){
+  return (value || "").toString().trim().toLowerCase();
+}
+
+function renderNeighborhoodSuggestions(query = ""){
+  const input = getNeighborhoodInput();
+  const wrap = getNeighborhoodSuggestions();
+  if(!input || !wrap) return;
+
+  const normalizedQuery = normalizeText(query);
+  const matches = neighborhoodList.filter(name => normalizeText(name).includes(normalizedQuery)).slice(0, 8);
+
+  if(matches.length === 0){
+    wrap.innerHTML = `<button type="button" class="bairro-autocomplete-empty" disabled>Nenhum bairro encontrado</button>`;
+    wrap.hidden = false;
+    input.setAttribute("aria-expanded", "true");
+    return;
+  }
+
+  wrap.innerHTML = matches.map(name => `
+    <button type="button" data-bairro-option="${name.replace(/"/g, "&quot;")}">${name}</button>
+  `).join("");
+  wrap.hidden = false;
+  input.setAttribute("aria-expanded", "true");
+}
+
+function hideNeighborhoodSuggestions(){
+  const input = getNeighborhoodInput();
+  const wrap = getNeighborhoodSuggestions();
+  if(!input || !wrap) return;
+  wrap.hidden = true;
+  wrap.innerHTML = "";
+  input.setAttribute("aria-expanded", "false");
+}
+
+function scheduleHideNeighborhoodSuggestions(){
+  clearTimeout(neighborhoodHideTimer);
+  neighborhoodHideTimer = setTimeout(hideNeighborhoodSuggestions, 120);
+}
+
+function handleNeighborhoodInput(value){
+  const normalized = normalizeText(value);
+  if(!normalized){
+    renderNeighborhoodSuggestions("");
+    return;
+  }
+  renderNeighborhoodSuggestions(normalized);
+}
+
 function renderNeighborhoodOptions(names){
-  const datalist = document.getElementById("bairroList");
-  if(!datalist) return;
-  const unique = [...new Set(names.filter(Boolean).map(n => n.trim()))]
+  neighborhoodList = [...new Set(names.filter(Boolean).map(n => n.trim()))]
     .sort((a, b) => a.localeCompare(b, "pt-BR"));
-  datalist.innerHTML = unique.map(name => `<option value="${name.replace(/"/g, "&quot;")}"></option>`).join("");
+  const input = getNeighborhoodInput();
+  if(input && input.value.trim()){
+    renderNeighborhoodSuggestions(input.value);
+  }
 }
 
 async function loadIpatingaNeighborhoods(){
@@ -740,6 +800,21 @@ function bindUI(){
   addressFields.bairro.addEventListener("input", () => {
     addressFields.bairro.classList.remove("error");
     localStorage.setItem("pb-bairro", addressFields.bairro.value);
+    handleNeighborhoodInput(addressFields.bairro.value);
+  });
+  addressFields.bairro.addEventListener("focus", () => {
+    handleNeighborhoodInput(addressFields.bairro.value);
+  });
+  addressFields.bairro.addEventListener("blur", scheduleHideNeighborhoodSuggestions);
+  addressFields.bairro.addEventListener("keydown", (e) => {
+    if(e.key === "Escape") hideNeighborhoodSuggestions();
+    if(e.key === "ArrowDown" || e.key === "Enter"){
+      const first = document.querySelector("#bairroSuggestions button:not([disabled])");
+      if(first){
+        e.preventDefault();
+        first.focus();
+      }
+    }
   });
   addressFields.rua.addEventListener("input", () => {
     addressFields.rua.classList.remove("error");
@@ -752,6 +827,20 @@ function bindUI(){
   const payMethodEl = document.getElementById("payMethod");
   if(payMethodEl){
     payMethodEl.addEventListener("change", () => payMethodEl.classList.remove("error"));
+  }
+  const suggestions = getNeighborhoodSuggestions();
+  if(suggestions){
+    suggestions.addEventListener("mousedown", () => clearTimeout(neighborhoodHideTimer));
+    suggestions.addEventListener("click", (e) => {
+      const option = e.target.closest("[data-bairro-option]");
+      if(!option) return;
+      const input = getNeighborhoodInput();
+      if(!input) return;
+      input.value = option.dataset.bairroOption;
+      localStorage.setItem("pb-bairro", input.value);
+      input.classList.remove("error");
+      hideNeighborhoodSuggestions();
+    });
   }
   document.getElementById("overlay").addEventListener("focusin", (e) => {
     if(e.target.matches("input, select, textarea")){

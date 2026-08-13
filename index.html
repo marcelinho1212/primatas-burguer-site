@@ -214,8 +214,10 @@
         </div>
         <div class="ticket-address-field">
           <label for="custBairro">Bairro</label>
-          <input type="text" id="custBairro" list="bairroList" placeholder="Selecione ou digite seu bairro" autocomplete="address-level2">
-          <datalist id="bairroList"></datalist>
+          <div class="bairro-autocomplete-wrap">
+            <input type="text" id="custBairro" placeholder="Selecione ou digite seu bairro" autocomplete="off" inputmode="text" aria-autocomplete="list" aria-controls="bairroSuggestions" aria-expanded="false">
+            <div class="bairro-autocomplete" id="bairroSuggestions" hidden></div>
+          </div>
         </div>
         <div class="ticket-address-row">
           <div class="ticket-address-field">
