@@ -540,10 +540,14 @@ footer .handle{font-family:'Space Mono',monospace; font-size:.72rem; color:var(-
   color:var(--ticket-ink); font-family:'Karla',sans-serif;
   min-height:48px;
 }
-.upsell-add img{width:48px; height:48px; object-fit:cover; border-radius:6px; flex-shrink:0;}
-.upsell-add .info{flex:1; min-width:0;}
+.upsell-add img, .upsell-drink img{width:48px; height:48px; object-fit:cover; border-radius:6px; flex-shrink:0;}
+.upsell-add .info, .upsell-drink .info{flex:1; min-width:0;}
 .upsell-add .info strong, .upsell-drink strong{display:block; font-size:.86rem;}
 .upsell-add .info small, .upsell-drink small{color:#6d6253; font-size:.78rem;}
+.upsell-drink .drink-emoji{
+  width:48px; height:48px; border-radius:6px; flex-shrink:0;
+  display:grid; place-items:center; background:#f2e8d7; font-size:1.15rem;
+}
 .upsell-cta{
   background:var(--orange); color:var(--on-orange); padding:8px 10px; border-radius:6px;
   font-weight:700; font-size:.68rem; text-transform:uppercase; letter-spacing:.03em; flex-shrink:0;

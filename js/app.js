@@ -258,7 +258,10 @@ function renderUpsells(){
         <div class="upsell-drinks">
           ${MENU.bebidas.map(d => `
             <button type="button" class="upsell-drink" data-quick-cat="bebidas" data-quick-id="${d.id}">
-              <span class="info"><strong>${d.emoji||""} ${d.name}</strong><small>${brl(d.price)}</small></span>
+              ${d.img
+                ? `<img src="${d.img}" alt="${d.name}">`
+                : `<span class="drink-emoji">${d.emoji||"🥤"}</span>`}
+              <span class="info"><strong>${d.name}</strong><small>${brl(d.price)}</small></span>
               <span class="upsell-cta">Adicionar</span>
             </button>
           `).join("")}
