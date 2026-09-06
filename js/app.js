@@ -36,16 +36,49 @@ let openSheet = null;
 const qtyState = {};
 let sheetQty = 1;
 let ticketStep = "items";
-const DELIVERY_FEE = 5.00;
+const DEFAULT_DELIVERY_FEE = 5.00;
 let neighborhoodList = [];
 let neighborhoodHideTimer = null;
-const ipatingaFallbackBairros = [
-  "Barra Alegre", "Bela Vista", "Bethania", "Bom Jardim", "Bom Retiro", "Canaa", "Caravelas",
-  "Chacara Madalena", "Cidade Nobre", "Esperanca", "Forquilha", "Horto", "Iguacu", "Ideal",
-  "Imbaubas", "Ipanema", "Jardim Panorama", "Limoeiro", "Nova Esperanca", "Novo Cruzeiro",
-  "Parque das Aguas", "Recanto", "Vale do Sol", "Vagalume", "Veneza", "Vila Celeste",
-  "Vila Formosa", "Vila Militar"
-];
+const deliveryFees = {
+  "Betânia": 5.00,
+  "Taúbas": 5.00,
+  "Granjas Vagalume": 5.00,
+  "Canaã": 5.00,
+  "Vila Celeste": 6.00,
+  "Tiradentes": 6.00,
+  "Esperança": 6.00,
+  "Bom Jardim": 6.00,
+  "Córrego Novo": 6.00,
+  "Chácaras Madalena": 6.00,
+  "Vila Formosa": 6.00,
+  "Limoeiro": 8.00,
+  "Barra Alegre": 8.00,
+  "Chácaras Oliveira": 8.00,
+  "Cidade Nobre": 7.00,
+  "Iguaçu": 8.00,
+  "Ideal": 8.00,
+  "Ferroviários": 8.00,
+  "Jardim Panorama": 8.00,
+  "Veneza": 8.00,
+  "Caravelas": 8.00,
+  "Novo Cruzeiro": 8.00,
+  "Centro": 9.00,
+  "Bela Vista": 9.00,
+  "Imbaúbas": 9.00,
+  "Bom Retiro": 9.00,
+  "Horto": 10.00,
+  "Cariru": 10.00,
+  "Castelo": 10.00,
+  "Vila Ipanema": 10.00,
+  "Das Águas": 10.00,
+  "Pedra Branca": 10.00,
+  "Tribuna": 10.00,
+  "Ipaneminha": 10.00
+};
+const deliveryFeeByNeighborhood = Object.fromEntries(
+  Object.entries(deliveryFees).map(([name, fee]) => [normalizeText(name), fee])
+);
+const ipatingaFallbackBairros = Object.keys(deliveryFees);
 
 function brl(v){ return "R$ " + v.toFixed(2).replace(".", ","); }
 
@@ -161,8 +194,12 @@ function orderSubtotal(){
   return cartTotal();
 }
 
+function currentDeliveryFee(){
+  return deliveryFeeForNeighborhood(document.getElementById("custBairro")?.value);
+}
+
 function orderTotal(){
-  return orderSubtotal() + DELIVERY_FEE;
+  return orderSubtotal() + currentDeliveryFee();
 }
 
 function categoryLabel(cat){
@@ -199,6 +236,7 @@ function renderChargesSummary(){
       <strong>${brl(total)}</strong>
     </div>
   `).join("");
+  const deliveryFee = currentDeliveryFee();
 
   wrap.innerHTML = `
     <div class="ticket-summary-title">Resumo da cobrança <span>DETALHADO</span></div>
@@ -211,7 +249,7 @@ function renderChargesSummary(){
       </div>
       <div class="ticket-summary-row">
         <span>Taxa de entrega</span>
-        <strong>${brl(DELIVERY_FEE)}</strong>
+        <strong>${brl(deliveryFee)}</strong>
       </div>
       <div class="ticket-summary-divider"></div>
       <div class="ticket-summary-row ticket-summary-total">
@@ -399,7 +437,11 @@ function getNeighborhoodSuggestions(){
 }
 
 function normalizeText(value){
-  return (value || "").toString().trim().toLowerCase();
+  return (value || "").toString().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+}
+
+function deliveryFeeForNeighborhood(neighborhood){
+  return deliveryFeeByNeighborhood[normalizeText(neighborhood)] ?? DEFAULT_DELIVERY_FEE;
 }
 
 function renderNeighborhoodSuggestions(query = ""){
@@ -448,7 +490,7 @@ function handleNeighborhoodInput(value){
 }
 
 function renderNeighborhoodOptions(names){
-  neighborhoodList = [...new Set(names.filter(Boolean).map(n => n.trim()))]
+  neighborhoodList = [...new Set([...names, ...ipatingaFallbackBairros].filter(Boolean).map(n => n.trim()))]
     .sort((a, b) => a.localeCompare(b, "pt-BR"));
   const input = getNeighborhoodInput();
   if(input && input.value.trim()){
@@ -648,7 +690,7 @@ function sendOrder(){
   Object.entries(categoryTotals).forEach(([cat, total]) => {
     msg += `${categoryLabel(cat)}: ${brl(total)}\n`;
   });
-  msg += `Taxa de entrega: ${brl(DELIVERY_FEE)}\n`;
+  msg += `Taxa de entrega: ${brl(currentDeliveryFee())}\n`;
   msg += `*Total: ${brl(orderTotal())}*`;
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
 }
@@ -804,6 +846,9 @@ function bindUI(){
     addressFields.bairro.classList.remove("error");
     localStorage.setItem("pb-bairro", addressFields.bairro.value);
     handleNeighborhoodInput(addressFields.bairro.value);
+    renderChargesSummary();
+    document.getElementById("ticketTotal").textContent = brl(orderTotal());
+    document.getElementById("ticketTotalConfirm").textContent = brl(orderTotal());
   });
   addressFields.bairro.addEventListener("focus", () => {
     handleNeighborhoodInput(addressFields.bairro.value);
@@ -843,6 +888,9 @@ function bindUI(){
       localStorage.setItem("pb-bairro", input.value);
       input.classList.remove("error");
       hideNeighborhoodSuggestions();
+      renderChargesSummary();
+      document.getElementById("ticketTotal").textContent = brl(orderTotal());
+      document.getElementById("ticketTotalConfirm").textContent = brl(orderTotal());
     });
   }
   document.getElementById("overlay").addEventListener("focusin", (e) => {
